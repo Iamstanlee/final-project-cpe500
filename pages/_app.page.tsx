@@ -5,7 +5,7 @@ import { Rubik } from 'next/font/google';
 import Scaffold from '@/components/scaffold';
 import 'react-toastify/dist/ReactToastify.min.css';
 import './globals.css';
-import { cn } from '../lib/cn';
+import { cn } from '@/lib/utils';
 
 const rubik = Rubik({
   subsets: ['latin'],
