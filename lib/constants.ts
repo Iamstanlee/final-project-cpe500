@@ -25,6 +25,7 @@ export const chainId__key = 'chain_id';
 
 export enum Db {
   users__table = 'users',
-  integrations__table = 'integrations',
+  wallets__table='wallets',
+  transactions__table = 'transactions',
   payment_link__table = 'payment_link',
 }

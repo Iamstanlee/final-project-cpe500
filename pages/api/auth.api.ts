@@ -1,33 +1,48 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { utils } from 'ethers';
-import jwt from 'jsonwebtoken';
-import { superSupabase } from '@/lib/supabase';
-import { Db } from '@/lib/constants';
+import { NextApiRequest, NextApiResponse } from "next";
+import { superSupabase } from "@/lib/supabase";
+import { Db } from "@/lib/constants";
+import { User, Wallet } from "@/types";
+import { deserialize } from "@/lib/utils";
 
-export default async function handler(request: NextApiRequest, response: NextApiResponse) {
-  const { address, chainId, message, signature } = JSON.parse(request.body);
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { user_id, email_address, first_name, last_name } = deserialize<{
+    user_id: string;
+    email_address: string;
+    first_name: string;
+    last_name: string;
+  }>(req.body);
 
-  const recoveredAddress = utils.verifyMessage(message, signature);
-
-  if (utils.getAddress(address) === recoveredAddress) {
-    const token = jwt.sign({ address }, `${process.env.SUPABASE_JWT_SECRET_KEY}`, {
-      expiresIn: '7d',
+  try {
+    await superSupabase.from(Db.users__table).upsert(<User>{
+      id: user_id,
+      email_address,
+      first_name,
+      last_name,
     });
 
-    const { data: user, error } = await superSupabase.from(Db.users__table).select().match({ address }).single();
-    if (error?.code === 'PGRST116') {
-      const appId = utils.base64.encode((address as string).slice(0, 12) + `${Date.now()}`).replaceAll('=', '');
+    const { data: walletData } = await superSupabase
+      .from(Db.wallets__table)
+      .upsert(<Wallet>{
+        user_id,
+        balance: 100.0,
+        unresolved: 0.0,
+      })
+      .select("id")
+      .single();
 
-      const userData = { app_id: appId, active_chain_id: chainId, address };
-      const integrationData = { id: appId, active_chain_id: chainId, address };
+    await superSupabase.from(Db.users__table).insert(<User>{
+      first_name,
+      last_name,
+      email_address,
+      wallet_id: walletData?.id,
+    });
 
-      await superSupabase.from(Db.users__table).upsert(userData);
-      await superSupabase.from(Db.integrations__table).upsert(integrationData);
-
-      return response.status(200).json({ success: true, token, user: userData });
-    }
-
-    return response.status(200).json({ success: true, token, user });
+    return res.status(200).json({ message: "Account created successfully" });
+  } catch (error) {
+    console.error(error, "Failed to create account.");
+    return res.status(500).json({ message: "Failed to create account." });
   }
-  return response.status(400).json({ success: false, error: 'Signature is invalid' });
 }

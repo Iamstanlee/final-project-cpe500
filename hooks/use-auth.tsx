@@ -1,8 +1,10 @@
 import { User } from "@/lib/types";
+import { generateUid } from "@/lib/utils";
 import { useRouter } from "next/router";
 import {
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -18,6 +20,8 @@ export enum AuthState {
 interface AuthContextData {
   authState: AuthState;
   user?: User;
+  signIn: () => void;
+  payemntLink?: string;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -30,16 +34,26 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     AuthState.SIGN_IN_REQUIRED
   );
   const [user, setUser] = useState<User>();
+  const [payemntLink, setPayemntLink] = useState<string>();
 
   useEffect(() => {
     if ([AuthState.SIGN_IN_REQUIRED].includes(authState)) router.push("/login");
   }, [authState]);
+
+  const signIn = useCallback(() => {
+    // TODO: create wallet and payment link on sign up
+    router.push("/");
+    setAuthState(AuthState.SIGN_IN_SUCCESS);
+    setPayemntLink(generateUid());
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         authState,
         user,
+        signIn,
+        payemntLink,
       }}
     >
       {children}

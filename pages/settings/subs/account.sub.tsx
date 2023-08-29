@@ -1,6 +1,6 @@
 "use client";
 
-import { Twitter, AtSign, Briefcase, Globe } from "lucide-react";
+import { AtSign, Briefcase, Globe, Link } from "lucide-react";
 import { PencilSimple } from "phosphor-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,10 +15,12 @@ import {
 } from "@/components/ui/dialog";
 import AccountUpdateForm from "../components/form";
 import { useCallback, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
 export const revalidate = 100;
 
 const Accounts = () => {
+  const { payemntLink } = useAuth();
   const [open, setOpen] = useState(false);
 
   const onClose = useCallback(() => setOpen(false), [open]);
@@ -28,7 +30,7 @@ const Accounts = () => {
       <Card className="border border-slate-300">
         <CardHeader>
           <CardTitle className="flex flex-row justify-between items-center">
-            Business Information
+            Account Information
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button
@@ -41,14 +43,17 @@ const Accounts = () => {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] bg-white">
                 <DialogHeader>
-                  <DialogTitle>Edit business information</DialogTitle>
+                  <DialogTitle>Edit account information</DialogTitle>
                   <DialogDescription>
                     Make changes to your profile here. Click save when you're
                     done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <AccountUpdateForm onClose={onClose} />
+                  <AccountUpdateForm
+                    onClose={onClose}
+                    payment_link={payemntLink}
+                  />
                 </div>
               </DialogContent>
             </Dialog>
@@ -59,8 +64,8 @@ const Accounts = () => {
           <div className="flex flex-row">
             <Briefcase className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
-              Business Name
-              <span className="text-slate-950">'Business name'</span>
+              Full Name
+              <span className="text-slate-950">'Full name'</span>
             </div>
           </div>
 
@@ -73,18 +78,10 @@ const Accounts = () => {
           </div>
 
           <div className="flex flex-row">
-            <Twitter className="mr-2" size={18} />
+            <Link className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
-              Twitter Handle
-              <span className="text-slate-950">@twitter_handle</span>
-            </div>
-          </div>
-
-          <div className="flex flex-row">
-            <Globe className="mr-2" size={18} />
-            <div className="flex flex-col text-slate-500 text-sm">
-              Business Website
-              <span className="text-slate-950">www.webisite.url</span>
+              Payment Link
+              <span className="text-slate-950">{payemntLink}</span>
             </div>
           </div>
         </CardContent>

@@ -16,22 +16,20 @@ import { userSchema } from "@/lib/types";
 
 interface Props {
   onClose: () => void;
+  payment_link?: string;
 }
 
 type IntegrationFormValues = z.infer<typeof userSchema>;
 let defaultValues: Partial<IntegrationFormValues> = {};
 
-const AccountUpdateForm = ({ onClose }: Props) => {
+const AccountUpdateForm = ({ onClose, payment_link }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   defaultValues = {
-    address: "",
     email_address: "",
-    app_id: "",
-    active_chain_id: "",
-    business_name: "",
-    twitter_handle: "",
-    website_url: "",
+    first_name: "",
+    last_name: "",
+    payment_link,
   };
 
   const form = useForm<IntegrationFormValues>({
@@ -51,19 +49,44 @@ const AccountUpdateForm = ({ onClose }: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="business_name"
+          name="first_name"
           render={({ field }) => (
             <FormItem className="space-y-1">
               <span>
                 <FormLabel>
-                  Account Name <span className="text-red-300">*</span>
+                  First Name <span className="text-red-300">*</span>
                 </FormLabel>
               </span>
               <FormControl>
                 <Input
-                  id="business_name"
-                  placeholder="Awesome business"
-                  {...form.register("business_name", {
+                  id="first_name"
+                  placeholder="John"
+                  {...form.register("first_name", {
+                    required: true,
+                    minLength: 1,
+                  })}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="last_name"
+          render={({ field }) => (
+            <FormItem className="space-y-1">
+              <span>
+                <FormLabel>
+                  Last Name <span className="text-red-300">*</span>
+                </FormLabel>
+              </span>
+              <FormControl>
+                <Input
+                  id="last_name"
+                  placeholder="Doe"
+                  {...form.register("last_name", {
                     required: true,
                     minLength: 1,
                   })}
@@ -99,43 +122,22 @@ const AccountUpdateForm = ({ onClose }: Props) => {
 
         <FormField
           control={form.control}
-          name="twitter_handle"
+          name="payment_link"
           render={({ field }) => (
             <FormItem className="space-y-1">
               <span>
                 <FormLabel>
-                  Twitter Handle <span className="text-red-300">*</span>
+                  Payment Link <span className="text-red-300">*</span>
                 </FormLabel>
               </span>
               <FormControl>
-                <Input id="twitter_handle" placeholder="@handle" {...field} />
+                <Input id="payment_link" disabled {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="website_url"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <span>
-                <FormLabel>
-                  Website URL <span className="text-red-300">*</span>
-                </FormLabel>
-              </span>
-              <FormControl>
-                <Input
-                  id="website_url"
-                  placeholder="https://wano.finance"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button
           className="w-full rounded-md"
           variant={"primary"}

@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const signupInputSchema = z.object({
   first_name: z.string({
-    required_error: "Must provide an first name for signup",
+    required_error: "Must provide a first name for signup",
   }),
   last_name: z.string({
-    required_error: "Must provide an last name for signup",
+    required_error: "Must provide a last name for signup",
   }),
   email_address: z
     .string({ required_error: "Must provide an email for signup" })
@@ -45,33 +45,38 @@ export const transactionSchema = z.object({
 export type Transaction = z.infer<typeof transactionSchema>;
 
 export const paymentLinkSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  description: z.string(),
-  settlement_token: z.string(),
+  user_id: z.string(),
+  slug: z.string(),
   amount: z.number(),
   collected_totalamount: z.number().optional().default(0),
   num_of_transactions: z.number().optional().default(0),
-  app_id: z.string(),
+  metadata: z.object({
+    user_id: z.string(),
+    user_name: z.string(),
+    user_email: z.string(),
+  }),
 });
 
 export type PaymentLink = z.infer<typeof paymentLinkSchema>;
 
-export const paymentLinkInputSchema = z.object({
-  id: z.string(),
-  title: z.string({
-    required_error: "Must provide a name/title for your payment link",
-  }),
-  description: z.string({ required_error: "Description is required" }),
-  settlement_token: z.string(),
-  amount: z.number({ required_error: "A payable amount has to be provided" }),
-  app_id: z.string(),
-});
-
-export type PaymentLinkInput = z.infer<typeof paymentLinkInputSchema>;
-
 export const userSchema = z.object({
   email_address: z.string().email(),
+  wallet_id: z.string(),
+  id: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  payment_link: z.string(),
 });
 
 export type User = z.infer<typeof userSchema>;
+
+export const walletSchema = z.object({
+  id: z.string(),
+  user_id: z.string(),
+  balance: z.number(),
+  unresolved: z.number(),
+  currency: z.string(),
+  public_address: z.string().optional(),
+});
+
+export type Wallet = z.infer<typeof walletSchema>;

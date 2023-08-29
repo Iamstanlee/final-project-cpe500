@@ -14,6 +14,7 @@ import {
 } from "@/form";
 import { Input } from "@/input";
 import { LoginInput, loginInputSchema } from "@/types";
+import { useAuth } from "@/hooks/use-auth";
 
 const defaultValues: Partial<LoginInput> = {
   email_address: "",
@@ -21,6 +22,8 @@ const defaultValues: Partial<LoginInput> = {
 };
 
 const LoginForm = () => {
+  const { signIn } = useAuth();
+
   const [loading, setLoading] = useState(false);
 
   const form = useForm<LoginInput>({
@@ -30,10 +33,10 @@ const LoginForm = () => {
 
   async function onSubmit(data: LoginInput) {
     setLoading(true);
-    // await createPaymentLink(data);
+    signIn();
     console.log(data);
 
-    // setLoading(false);
+    setLoading(false);
   }
 
   return (
