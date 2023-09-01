@@ -20,9 +20,8 @@ import { useAuth } from "@/hooks/use-auth";
 export const revalidate = 100;
 
 const Accounts = () => {
-  const { payemntLink } = useAuth();
+  const { paymentLink } = useAuth();
   const [open, setOpen] = useState(false);
-
   const onClose = useCallback(() => setOpen(false), [open]);
 
   return (
@@ -52,7 +51,7 @@ const Accounts = () => {
                 <div className="grid gap-4 py-4">
                   <AccountUpdateForm
                     onClose={onClose}
-                    payment_link={payemntLink}
+                    payment_link={paymentLink?.slug}
                   />
                 </div>
               </DialogContent>
@@ -81,7 +80,7 @@ const Accounts = () => {
             <Link className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
               Payment Link
-              <span className="text-slate-950">{payemntLink}</span>
+              <span className="text-slate-950">{paymentLink?.slug}</span>
             </div>
           </div>
         </CardContent>

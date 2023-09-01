@@ -22,7 +22,7 @@ const defaultValues: Partial<SignupInput> = {
 };
 
 const SignupForm = () => {
-  const { signIn } = useAuth();
+  const { signUp } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<SignupInput>({
@@ -32,10 +32,7 @@ const SignupForm = () => {
 
   async function onSubmit(data: SignupInput) {
     setLoading(true);
-    signIn();
-    console.log(data);
-
-    // setLoading(false);
+    signUp(data.email_address, data.first_name, data.last_name, data.password);
   }
 
   return (

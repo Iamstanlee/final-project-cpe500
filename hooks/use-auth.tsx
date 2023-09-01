@@ -1,5 +1,6 @@
-import { User } from "@/lib/types";
-import { generateUid } from "@/lib/utils";
+import { post__request } from "@/lib/constants";
+import { supabase, SupabaseUser } from "@/lib/supabase";
+import { PaymentLink, User, Wallet } from "@/lib/types";
 import { useRouter } from "next/router";
 import {
   PropsWithChildren,
@@ -7,8 +8,10 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
+import { toast } from "react-toastify";
 
 export enum AuthState {
   SIGN_UP_REQUIRED,
@@ -20,31 +23,164 @@ export enum AuthState {
 interface AuthContextData {
   authState: AuthState;
   user?: User;
-  signIn: () => void;
-  payemntLink?: string;
+  wallet?: Wallet;
+  paymentLink?: PaymentLink;
+  signOut: () => void;
+  signIn: Function;
+  signUp: Function;
+}
+
+interface UserBootstrapData extends User {
+  user: User;
+  wallet: Wallet;
+  payment_link: PaymentLink;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-// TODO: fetch user from db and update authState
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
-  const [authState, setAuthState] = useState<AuthState>(
-    AuthState.SIGN_IN_REQUIRED
+  const [authState, setAuthState] = useState<AuthState>(AuthState.LOADING);
+  const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | undefined>();
+  const [bootstrapData, setBootstrapData] = useState<UserBootstrapData>();
+
+  const user = useMemo(() => bootstrapData, [bootstrapData]);
+  const wallet = useMemo(() => bootstrapData?.user?.wallet, [bootstrapData]);
+  const paymentLink = useMemo(
+    () => bootstrapData?.user?.payment_link,
+    [bootstrapData]
   );
-  const [user, setUser] = useState<User>();
-  const [payemntLink, setPayemntLink] = useState<string>();
+
+  useEffect(() => {
+    checkSession();
+  }, []);
+
+  useEffect(() => {
+    if (supabaseUser) {
+      getUser();
+    }
+  }, [supabaseUser]);
 
   useEffect(() => {
     if ([AuthState.SIGN_IN_REQUIRED].includes(authState)) router.push("/login");
   }, [authState]);
 
-  const signIn = useCallback(() => {
-    // TODO: create wallet and payment link on sign up
-    router.push("/");
+  const authSuccess = (toastMessage: string) => {
+    toast.success(toastMessage);
     setAuthState(AuthState.SIGN_IN_SUCCESS);
-    setPayemntLink(generateUid());
+    router.push("/");
+  };
+
+  const checkSession = useCallback(async () => {
+    setAuthState(AuthState.LOADING);
+    const { data } = await supabase.auth.getSession();
+    if (data && data.session) {
+      setSupabaseUser(data?.session?.user);
+      setAuthState(AuthState.SIGN_IN_SUCCESS);
+    } else {
+      setAuthState(AuthState.SIGN_IN_REQUIRED);
+    }
+  }, []);
+
+  const getUser = async () => {
+    setAuthState(AuthState.LOADING);
+    try {
+      const response = await fetch("/api/fetch-user/", {
+        ...post__request,
+        body: JSON.stringify({
+          user_id: supabaseUser?.id,
+        }),
+      });
+      if (response.status == 200) {
+        const data = await response.json();
+        const bootstrap = data as UserBootstrapData;
+        setBootstrapData(bootstrap);
+        setAuthState(AuthState.SIGN_IN_SUCCESS);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      // setAuthState(AuthState.SIGN_IN_REQUIRED);
+    }
+  };
+
+  const signIn = useCallback(
+    async (email_address: string, password: string) => {
+      const { data } = await supabase.auth.signInWithPassword({
+        email: email_address,
+        password: password,
+      });
+      if (data) {
+        authSuccess("You're signed in");
+      } else {
+        toast.error("An error occurred while loggin you in. Please try again.");
+      }
+    },
+    []
+  );
+
+  const createAccount = useCallback(
+    async (
+      first_name: string,
+      last_name: string,
+      user_id: string,
+      email_address: string
+    ) => {
+      try {
+        const response = await fetch("/api/create-account/", {
+          ...post__request,
+          body: JSON.stringify({
+            user_id,
+            email_address,
+            first_name,
+            last_name,
+          }),
+        });
+        if (response.status == 200) {
+          const data = await response.json();
+          authSuccess(data.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+    []
+  );
+
+  const signUp = useCallback(
+    async (
+      email_address: string,
+      first_name: string,
+      last_name: string,
+      password: string
+    ) => {
+      const { data } = await supabase.auth.signUp({
+        email: email_address,
+        password: password,
+      });
+      if (data?.user) {
+        createAccount(
+          first_name,
+          last_name,
+          data?.user?.id as string,
+          data?.user?.email as string
+        );
+      } else {
+        toast.error(
+          "An error occurred while creating account. Please try again."
+        );
+      }
+    },
+    []
+  );
+
+  const signOut = useCallback(async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Something went wrong");
+    } else {
+      setAuthState(AuthState.SIGN_IN_REQUIRED);
+    }
   }, []);
 
   return (
@@ -52,8 +188,11 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       value={{
         authState,
         user,
+        wallet,
+        paymentLink,
         signIn,
-        payemntLink,
+        signUp,
+        signOut,
       }}
     >
       {children}

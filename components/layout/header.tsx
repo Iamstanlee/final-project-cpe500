@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 interface HeaderProps {
   className?: string;
 }
 
 const Header = ({ className }: HeaderProps) => {
+  const { signOut } = useAuth();
   return (
     <div
       className={cn(
@@ -14,12 +16,10 @@ const Header = ({ className }: HeaderProps) => {
       )}
     >
       <Link href="/dashboard/" className="flex">
-        {/* <SvgIcon name="wano" size={70} /> */}
-        logo
+        Logo
       </Link>
       <div className="ml-auto flex items-center space-x-4">
-        {/* <NetworkSwitcher /> */}
-        switcher{" "}
+        <p className="text-red-500" onClick={signOut}>Logout</p>
       </div>
     </div>
   );

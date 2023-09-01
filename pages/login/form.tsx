@@ -33,10 +33,7 @@ const LoginForm = () => {
 
   async function onSubmit(data: LoginInput) {
     setLoading(true);
-    signIn();
-    console.log(data);
-
-    setLoading(false);
+    signIn(data.email_address, data.password);
   }
 
   return (

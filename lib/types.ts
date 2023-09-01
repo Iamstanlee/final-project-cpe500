@@ -48,6 +48,7 @@ export const paymentLinkSchema = z.object({
   user_id: z.string(),
   slug: z.string(),
   amount: z.number(),
+  type: z.string(),
   collected_totalamount: z.number().optional().default(0),
   num_of_transactions: z.number().optional().default(0),
   metadata: z.object({
@@ -59,17 +60,6 @@ export const paymentLinkSchema = z.object({
 
 export type PaymentLink = z.infer<typeof paymentLinkSchema>;
 
-export const userSchema = z.object({
-  email_address: z.string().email(),
-  wallet_id: z.string(),
-  id: z.string(),
-  first_name: z.string(),
-  last_name: z.string(),
-  payment_link: z.string(),
-});
-
-export type User = z.infer<typeof userSchema>;
-
 export const walletSchema = z.object({
   id: z.string(),
   user_id: z.string(),
@@ -80,3 +70,15 @@ export const walletSchema = z.object({
 });
 
 export type Wallet = z.infer<typeof walletSchema>;
+
+export const userSchema = z.object({
+  email_address: z.string().email(),
+  wallet_id: walletSchema,
+  wallet: walletSchema,
+  id: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  payment_link: paymentLinkSchema,
+});
+
+export type User = z.infer<typeof userSchema>;
