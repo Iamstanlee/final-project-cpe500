@@ -1,4 +1,4 @@
-import { post__request } from "@/lib/constants";
+import { Db, post__request } from "@/lib/constants";
 import { supabase, SupabaseUser } from "@/lib/supabase";
 import { PaymentLink, User, Wallet } from "@/lib/types";
 import { useRouter } from "next/router";
@@ -28,6 +28,7 @@ interface AuthContextData {
   signOut: () => void;
   signIn: Function;
   signUp: Function;
+  getPaymentLink: Function;
 }
 
 interface UserBootstrapData extends User {
@@ -45,7 +46,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | undefined>();
   const [bootstrapData, setBootstrapData] = useState<UserBootstrapData>();
 
-  const user = useMemo(() => bootstrapData, [bootstrapData]);
+  const user = useMemo(() => bootstrapData?.user, [bootstrapData]);
   const wallet = useMemo(() => bootstrapData?.user?.wallet, [bootstrapData]);
   const paymentLink = useMemo(
     () => bootstrapData?.user?.payment_link,
@@ -72,6 +73,12 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     router.push("/");
   };
 
+  const authError = (toastMessage: string) => {
+    setAuthState(AuthState.SIGN_IN_REQUIRED);
+    console.log(toastMessage);
+    toast.error(toastMessage);
+  };
+
   const checkSession = useCallback(async () => {
     setAuthState(AuthState.LOADING);
     const { data } = await supabase.auth.getSession();
@@ -83,8 +90,34 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
+  const getPaymentLink = async (slug: string) => {
+    try {
+      const response = await fetch("/api/get-payment-link/", {
+        ...post__request,
+        body: JSON.stringify({ slug }),
+      });
+      const data = await response.json();
+
+      if (response.status == 500) {
+        console.log(data.message);
+        toast.error(data.message);
+        return { error: data.message };
+      }
+      if (response.status == 200) {
+        console.log(data);
+        
+        return { data: data?.user as PaymentLink };
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+      return error.message;
+    }
+  };
+
   const getUser = async () => {
     setAuthState(AuthState.LOADING);
+
     try {
       const response = await fetch("/api/fetch-user/", {
         ...post__request,
@@ -92,28 +125,32 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
           user_id: supabaseUser?.id,
         }),
       });
+      const data = await response.json();
+
+      if (response.status == 500) {
+        authError(data.message);
+      }
       if (response.status == 200) {
-        const data = await response.json();
         const bootstrap = data as UserBootstrapData;
         setBootstrapData(bootstrap);
         setAuthState(AuthState.SIGN_IN_SUCCESS);
       }
     } catch (error) {
-      toast.error(error.message);
-      // setAuthState(AuthState.SIGN_IN_REQUIRED);
+      authError(error.message);
     }
   };
 
   const signIn = useCallback(
     async (email_address: string, password: string) => {
-      const { data } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email_address,
         password: password,
       });
-      if (data) {
-        authSuccess("You're signed in");
-      } else {
+      if (error) {
         toast.error("An error occurred while loggin you in. Please try again.");
+        console.log(error);
+      } else {
+        authSuccess("You're signed in");
       }
     },
     []
@@ -193,6 +230,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         signIn,
         signUp,
         signOut,
+        getPaymentLink,
       }}
     >
       {children}

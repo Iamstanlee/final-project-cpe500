@@ -16,11 +16,13 @@ import {
 import AccountUpdateForm from "../components/form";
 import { useCallback, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/router";
 
 export const revalidate = 100;
 
 const Accounts = () => {
-  const { paymentLink } = useAuth();
+  const router = useRouter();
+  const { paymentLink, user } = useAuth();
   const [open, setOpen] = useState(false);
   const onClose = useCallback(() => setOpen(false), [open]);
 
@@ -64,7 +66,7 @@ const Accounts = () => {
             <Briefcase className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
               Full Name
-              <span className="text-slate-950">'Full name'</span>
+              <span className="text-slate-950">{`${user?.first_name} ${user?.last_name}`}</span>
             </div>
           </div>
 
@@ -72,7 +74,7 @@ const Accounts = () => {
             <AtSign className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
               Email address
-              <span className="text-slate-950">Email Address</span>
+              <span className="text-slate-950">{user?.email_address}</span>
             </div>
           </div>
 
@@ -80,7 +82,12 @@ const Accounts = () => {
             <Link className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
               Payment Link
-              <span className="text-slate-950">{paymentLink?.slug}</span>
+              <span
+                className="text-slate-950 underline underline-offset-4"
+                onClick={() => router.push(`/pay/${paymentLink?.slug}`)}
+              >
+                {paymentLink?.slug}
+              </span>
             </div>
           </div>
         </CardContent>

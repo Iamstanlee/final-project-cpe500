@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import LoginPage from "@/pages/login/index.page";
 import withLoadingAndAuthGuard from "./with-loading-and-authguard";
 import SignupPage from "@/pages/signup/index.page";
+import PaymentPage from "@/pages/pay/[id].page";
 
 interface Props {
   children: React.ReactElement;
@@ -23,8 +24,12 @@ const Scaffold: React.FC<Props> = ({ children }: Props) => {
       ) : route.pathname.includes("/signup") ? (
         <section className="p-5 min-h-screen flex items-center justify-center w-full">
           <SignupPage />
-        </section>
-      ) : (
+          </section>
+          
+      ) :  route.pathname.includes("/pay") ? 
+        <section className="p-5 min-h-screen flex items-center justify-center w-full">
+          <PaymentPage />
+        </section>: (
         <div className="flex-col flex">
           <Header />
           <div className="bg-background grid lg:grid-cols-6">

@@ -82,3 +82,29 @@ export const userSchema = z.object({
 });
 
 export type User = z.infer<typeof userSchema>;
+
+export const cardInformationInputSchema = z.object({
+  idempotencyKey: z.string(),
+  keyId: z.string(),
+  encryptedData: z.string(),
+  name: z.string(),
+  city: z.string(),
+  country: z.string(),
+  line1: z.string(),
+  line2: z.string(),
+  district: z.string(),
+  postalCode: z.string(),
+  number: z.string(),
+  cvv: z.string(),
+  expMonth: z.string(),
+  expYear: z.string(),
+  email: z.string(),
+  phoneNumber: z.string(),
+  sessionId: z.string(),
+  ipAddress: z.string(),
+  amount: z.string(),
+  currency: z.string(),
+});
+
+export type CardInformation = z.infer<typeof cardInformationInputSchema>;
+
