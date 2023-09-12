@@ -1,6 +1,6 @@
-import Image from "next/image";
-import { MouseEventHandler } from "react";
-import { cn } from "@/lib/utils";
+import Image from 'next/image';
+import { MouseEventHandler } from 'react';
+import { cn } from '@/lib/utils';
 
 interface Props {
   onClick?: MouseEventHandler<HTMLImageElement>;
@@ -18,7 +18,7 @@ export default function SvgIcon(props: Props) {
       height={size}
       width={size}
       {...rest}
-      className={cn("cursor-pointer", className)}
+      className={cn('cursor-pointer', className)}
     />
   );
 }

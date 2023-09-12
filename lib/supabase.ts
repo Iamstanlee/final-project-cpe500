@@ -1,4 +1,4 @@
-import { createClient, User } from "@supabase/supabase-js";
+import { createClient, User } from '@supabase/supabase-js';
 
 export const supabase = createClient(
   `${process.env.NEXT_PUBLIC_SUPABASE_URL}`,

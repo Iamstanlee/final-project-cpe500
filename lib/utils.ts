@@ -1,33 +1,28 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatAddress = (addr: string) => {
-  return `${addr.substring(0, 5)}...${addr.substring(39)}`;
-};
-
 export const formatCurrency = (amount: number, currency?: string) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency ?? "USD",
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency ?? 'USD',
   }).format(amount);
 };
 
 export const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
   }).format(date);
 };
 
-export function generateUid() {
+export function generateRandomId() {
   const length = Math.floor(Math.random() * 3) + 7; // Generate a random number between 5 and 7
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdehklmnopqrstuvwxz0123456789";
-  let result = "1"; // Start with the prefix 1
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdehklmnopqrstuvwxz0123456789';
+  let result = '1'; // Start with the prefix 1
 
   for (let i = 0; i < length - 1; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
@@ -44,10 +39,7 @@ export async function copyToClipboard(text: string) {
 }
 
 export function isProduction(): boolean {
-  if (window.location.origin.includes("localhost")) {
-    return false;
-  }
-  return true;
+  return !window.location.origin.includes('localhost');
 }
 
 export const deserialize = <T>(data: string | T): T => {

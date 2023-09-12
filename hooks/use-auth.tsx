@@ -1,17 +1,9 @@
-import { Db, post__request } from "@/lib/constants";
-import { supabase, SupabaseUser } from "@/lib/supabase";
-import { PaymentLink, User, Wallet } from "@/lib/types";
-import { useRouter } from "next/router";
-import {
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { toast } from "react-toastify";
+import { post__request_header } from '@/lib/constants';
+import { supabase, SupabaseUser } from '@/lib/supabase';
+import { PaymentLink, User, Wallet } from '@/lib/types';
+import { useRouter } from 'next/router';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export enum AuthState {
   SIGN_UP_REQUIRED,
@@ -32,7 +24,6 @@ interface AuthContextData {
 }
 
 interface UserBootstrapData extends User {
-  user: User;
   wallet: Wallet;
   payment_link: PaymentLink;
 }
@@ -46,12 +37,9 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | undefined>();
   const [bootstrapData, setBootstrapData] = useState<UserBootstrapData>();
 
-  const user = useMemo(() => bootstrapData?.user, [bootstrapData]);
-  const wallet = useMemo(() => bootstrapData?.user?.wallet, [bootstrapData]);
-  const paymentLink = useMemo(
-    () => bootstrapData?.user?.payment_link,
-    [bootstrapData]
-  );
+  const user = useMemo(() => bootstrapData, [bootstrapData]);
+  const wallet = useMemo(() => bootstrapData?.wallet, [bootstrapData]);
+  const paymentLink = useMemo(() => bootstrapData?.payment_link, [bootstrapData]);
 
   useEffect(() => {
     checkSession();
@@ -64,13 +52,13 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   }, [supabaseUser]);
 
   useEffect(() => {
-    if ([AuthState.SIGN_IN_REQUIRED].includes(authState)) router.push("/login");
+    if ([AuthState.SIGN_IN_REQUIRED].includes(authState)) router.push('/login');
   }, [authState]);
 
   const authSuccess = (toastMessage: string) => {
     toast.success(toastMessage);
     setAuthState(AuthState.SIGN_IN_SUCCESS);
-    router.push("/");
+    router.push('/');
   };
 
   const authError = (toastMessage: string) => {
@@ -92,8 +80,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   const getPaymentLink = async (slug: string) => {
     try {
-      const response = await fetch("/api/get-payment-link/", {
-        ...post__request,
+      const response = await fetch('/api/get-payment-link/', {
+        ...post__request_header,
         body: JSON.stringify({ slug }),
       });
       const data = await response.json();
@@ -105,7 +93,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       }
       if (response.status == 200) {
         console.log(data);
-        
+
         return { data: data?.user as PaymentLink };
       }
     } catch (error) {
@@ -119,8 +107,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     setAuthState(AuthState.LOADING);
 
     try {
-      const response = await fetch("/api/fetch-user/", {
-        ...post__request,
+      const response = await fetch('/api/fetch-user/', {
+        ...post__request_header,
         body: JSON.stringify({
           user_id: supabaseUser?.id,
         }),
@@ -140,32 +128,23 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const signIn = useCallback(
-    async (email_address: string, password: string) => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email_address,
-        password: password,
-      });
-      if (error) {
-        toast.error("An error occurred while loggin you in. Please try again.");
-        console.log(error);
-      } else {
-        authSuccess("You're signed in");
-      }
-    },
-    []
-  );
+  const signIn = useCallback(async (email_address: string, password: string) => {
+    const { data } = await supabase.auth.signInWithPassword({
+      email: email_address,
+      password: password,
+    });
+    if (data) {
+      authSuccess("You're signed in");
+    } else {
+      toast.error('An error occurred while loggin you in. Please try again.');
+    }
+  }, []);
 
   const createAccount = useCallback(
-    async (
-      first_name: string,
-      last_name: string,
-      user_id: string,
-      email_address: string
-    ) => {
+    async (first_name: string, last_name: string, user_id: string, email_address: string) => {
       try {
-        const response = await fetch("/api/create-account/", {
-          ...post__request,
+        const response = await fetch('/api/create-account/', {
+          ...post__request_header,
           body: JSON.stringify({
             user_id,
             email_address,
@@ -184,37 +163,22 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     []
   );
 
-  const signUp = useCallback(
-    async (
-      email_address: string,
-      first_name: string,
-      last_name: string,
-      password: string
-    ) => {
-      const { data } = await supabase.auth.signUp({
-        email: email_address,
-        password: password,
-      });
-      if (data?.user) {
-        createAccount(
-          first_name,
-          last_name,
-          data?.user?.id as string,
-          data?.user?.email as string
-        );
-      } else {
-        toast.error(
-          "An error occurred while creating account. Please try again."
-        );
-      }
-    },
-    []
-  );
+  const signUp = useCallback(async (email_address: string, first_name: string, last_name: string, password: string) => {
+    const { data } = await supabase.auth.signUp({
+      email: email_address,
+      password: password,
+    });
+    if (data?.user) {
+      await createAccount(first_name, last_name, data?.user?.id as string, data?.user?.email as string);
+    } else {
+      toast.error('An error occurred while creating account. Please try again.');
+    }
+  }, []);
 
   const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } else {
       setAuthState(AuthState.SIGN_IN_REQUIRED);
     }
@@ -241,9 +205,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (Object.keys(context).length == 0) {
-    throw new Error(
-      "useAuth context must be used within a AuthContextProvider"
-    );
+    throw new Error('useAuth context must be used within a AuthContextProvider');
   }
   return context;
 };

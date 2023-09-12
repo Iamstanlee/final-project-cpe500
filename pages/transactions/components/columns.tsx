@@ -1,11 +1,10 @@
-import { cn, formatCurrency, formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, MoveDown, MoveUp } from 'lucide-react';
 import { Transaction } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
-import { formatAddress } from '@/lib/utils';
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -39,7 +38,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2 item-left">
-          <span className="truncate">{formatAddress(row.getValue('from'))}</span>
+          <span className="truncate">{row.original.from}</span>
         </div>
       );
     },
@@ -63,10 +62,9 @@ export const columns: ColumnDef<Transaction>[] = [
     header: ({ column }) => <HeaderItem column={column} title="Amount" />,
     cell: ({ row }) => {
       return (
-        <div className="flex flex-col items-left">
-          <span className="mr-2 text-muted-foreground">{row.original.amount.amount} ETH</span>
-          <span className="text-xs">{formatCurrency(Number.parseInt(row.original.amount.parallel) ?? 0.0)} USD</span>
-        </div>
+        <span className="mr-2 text-muted-foreground">
+          {row.original.amount.value} {row.original.amount.currency}
+        </span>
       );
     },
     filterFn: (row, id, value) => {

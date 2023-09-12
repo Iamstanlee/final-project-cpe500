@@ -1,10 +1,8 @@
-"use client";
-
-import { AtSign, Briefcase, Globe, Link } from "lucide-react";
-import { PencilSimple } from "phosphor-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { AtSign, Briefcase, Link } from 'lucide-react';
+import { PencilSimple } from 'phosphor-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -12,13 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import AccountUpdateForm from "../components/form";
-import { useCallback, useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/router";
-
-export const revalidate = 100;
+} from '@/components/ui/dialog';
+import AccountUpdateForm from '../components/form';
+import { useCallback, useState } from 'react';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/router';
 
 const Accounts = () => {
   const router = useRouter();
@@ -34,27 +30,17 @@ const Accounts = () => {
             Account Information
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button
-                  size={"icon"}
-                  variant={"primary"}
-                  className="rounded-md"
-                >
+                <Button size={'icon'} variant={'primary'} className="rounded-md">
                   <PencilSimple />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] bg-white">
                 <DialogHeader>
                   <DialogTitle>Edit account information</DialogTitle>
-                  <DialogDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
-                  </DialogDescription>
+                  <DialogDescription>Make changes to your profile here. Click save when you're done.</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <AccountUpdateForm
-                    onClose={onClose}
-                    payment_link={paymentLink?.slug}
-                  />
+                  <AccountUpdateForm onClose={onClose} />
                 </div>
               </DialogContent>
             </Dialog>
@@ -69,7 +55,6 @@ const Accounts = () => {
               <span className="text-slate-950">{`${user?.first_name} ${user?.last_name}`}</span>
             </div>
           </div>
-
           <div className="flex flex-row">
             <AtSign className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">
@@ -77,7 +62,6 @@ const Accounts = () => {
               <span className="text-slate-950">{user?.email_address}</span>
             </div>
           </div>
-
           <div className="flex flex-row">
             <Link className="mr-2" size={18} />
             <div className="flex flex-col text-slate-500 text-sm">

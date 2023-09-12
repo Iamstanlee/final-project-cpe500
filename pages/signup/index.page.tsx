@@ -1,5 +1,5 @@
-import Link from "next/link";
-import SignupForm from "./form";
+import Link from 'next/link';
+import SignupForm from './form';
 
 export default function SignupPage() {
   return (
@@ -8,7 +8,7 @@ export default function SignupPage() {
       <SignupForm />
       <div>
         <p className="text-xs text-center mt-4">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link className="text-primary" href="/login">
             Login
           </Link>

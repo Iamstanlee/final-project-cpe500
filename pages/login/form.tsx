@@ -1,24 +1,17 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/form";
-import { Input } from "@/input";
-import { LoginInput, loginInputSchema } from "@/types";
-import { useAuth } from "@/hooks/use-auth";
+import React, { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/form';
+import { Input } from '@/input';
+import { LoginRequestDto, loginInputSchema } from '@/types';
+import { useAuth } from '@/hooks/use-auth';
 
-const defaultValues: Partial<LoginInput> = {
-  email_address: "",
-  password: "",
+const defaultValues: Partial<LoginRequestDto> = {
+  email_address: '',
+  password: '',
 };
 
 const LoginForm = () => {
@@ -26,23 +19,19 @@ const LoginForm = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<LoginInput>({
+  const form = useForm<LoginRequestDto>({
     resolver: zodResolver(loginInputSchema),
     defaultValues,
   });
 
-  async function onSubmit(data: LoginInput) {
+  async function onSubmit(data: LoginRequestDto) {
     setLoading(true);
     signIn(data.email_address, data.password);
   }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        autoComplete="off"
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off" className="space-y-6">
         <FormField
           control={form.control}
           name="email_address"
@@ -68,12 +57,7 @@ const LoginForm = () => {
                 <FormLabel>Password</FormLabel>
               </span>
               <FormControl>
-                <Input
-                  autoComplete="new-password"
-                  type="password"
-                  placeholder="*****"
-                  {...field}
-                />
+                <Input autoComplete="new-password" type="password" placeholder="*****" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

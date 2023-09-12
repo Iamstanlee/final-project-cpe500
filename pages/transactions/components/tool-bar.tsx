@@ -19,7 +19,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator';
 import { Check, PlusCircle, X } from 'phosphor-react';
 import { Input } from '@/components/ui/input';
-import { statuses } from '@/lib/constants';
+import { tx__status_items } from '@/lib/constants';
 
 interface ToolbarProps<TData> {
   table: Table<TData>;
@@ -39,7 +39,7 @@ export function TableToolbar<TData>({ table, className }: ToolbarProps<TData>) {
           className="h-8 ml-3 w-[150px] lg:w-[250px]"
         />
         {table.getColumn('status') && (
-          <TableFilter column={table.getColumn('status')} title="Status" options={statuses} />
+          <TableFilter column={table.getColumn('status')} title="Status" options={tx__status_items} />
         )}
         {isFiltered && (
           <Button variant="ghost" onClick={() => table.resetColumnFilters()} className="h-8 px-2 lg:px-3">
