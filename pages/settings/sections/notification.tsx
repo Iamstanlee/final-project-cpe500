@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Bell, BellSlash, Target, At } from 'phosphor-react';
 
-export function Notifications() {
+export default function Notification() {
   return (
     <div>
       <Card className="border border-slate-300 mb-5">

@@ -6,6 +6,7 @@ import { Button } from '@/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/form';
 import { Input } from '@/input';
 import { userSchema } from '@/lib/types';
+import { useAuth } from '@/hooks/use-auth';
 
 interface Props {
   onClose: () => void;
@@ -16,6 +17,13 @@ let defaultValues: Partial<AccountFormValues> = {};
 
 const AccountUpdateForm = ({ onClose }: Props) => {
   const [loading, setLoading] = useState<boolean>();
+  const { user } = useAuth();
+
+  defaultValues = {
+    email_address: user?.email_address,
+    first_name: user?.first_name,
+    last_name: user?.last_name,
+  };
 
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(userSchema),
@@ -73,7 +81,7 @@ const AccountUpdateForm = ({ onClose }: Props) => {
                 <FormLabel>Email</FormLabel>
               </span>
               <FormControl>
-                <Input id="email_address" placeholder="naruto@konoha.com" {...field} />
+                <Input id="email_address" placeholder="naruto@konoha.com" {...field} disabled />
               </FormControl>
               <FormMessage />
             </FormItem>

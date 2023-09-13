@@ -1,41 +1,17 @@
-import React, { useState } from "react";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/form";
-import { Input } from "@/input";
-import { cardInformationInputSchema, userSchema } from "@/lib/types";
-import { exampleCards } from "@/lib/mock";
+import React, { useState } from 'react';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/form';
+import { Input } from '@/input';
+import { cardInformationInputSchema, userSchema } from '@/lib/types';
 
 type CardInformationFormValues = z.infer<typeof cardInformationInputSchema>;
 let defaultValues: Partial<CardInformationFormValues> = {};
 
 const CardInformationForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
-
-  defaultValues = {
-    amount: "",
-    email: exampleCards[0].formData.email,
-    name: exampleCards[0].formData.name,
-    line1: exampleCards[0].formData.line1,
-    district: exampleCards[0].formData.district,
-    country: exampleCards[0].formData.country,
-    city: exampleCards[0].formData.city,
-    postalCode: exampleCards[0].formData.postalCode,
-    expMonth: exampleCards[0].formData.expiry.month,
-    expYear: exampleCards[0].formData.expiry.year,
-    number: exampleCards[0].formData.cardNumber,
-    cvv: exampleCards[0].formData.cvv,
-    phoneNumber: exampleCards[0].formData.phoneNumber,
-  };
 
   const form = useForm<CardInformationFormValues>({
     resolver: zodResolver(userSchema),
@@ -46,7 +22,7 @@ const CardInformationForm = () => {
     console.log(data);
     setLoading(true);
     // submit function goes here
-    // setLoading(false);
+    setLoading(false);
   }
 
   return (
@@ -66,7 +42,7 @@ const CardInformationForm = () => {
                 <Input
                   id="amount"
                   placeholder="$20.00"
-                  {...form.register("amount", {
+                  {...form.register('amount', {
                     required: true,
                     minLength: 1,
                   })}
@@ -89,11 +65,7 @@ const CardInformationForm = () => {
                 </FormLabel>
               </span>
               <FormControl>
-                <Input
-                  id="email"
-                  placeholder="naruto@awesomebusiness.com"
-                  {...field}
-                />
+                <Input id="email" placeholder="naruto@awesomebusiness.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +86,7 @@ const CardInformationForm = () => {
                 <Input
                   id="name"
                   placeholder="John Doe"
-                  {...form.register("name", {
+                  {...form.register('name', {
                     required: true,
                     minLength: 1,
                   })}
@@ -140,7 +112,7 @@ const CardInformationForm = () => {
                 <Input
                   id="line1"
                   placeholder=""
-                  {...form.register("line1", {
+                  {...form.register('line1', {
                     required: true,
                     minLength: 1,
                   })}
@@ -166,7 +138,7 @@ const CardInformationForm = () => {
                 <Input
                   id="district"
                   placeholder=""
-                  {...form.register("district", {
+                  {...form.register('district', {
                     required: true,
                     minLength: 1,
                   })}
@@ -192,7 +164,7 @@ const CardInformationForm = () => {
                 <Input
                   id="country"
                   placeholder="NIgeria"
-                  {...form.register("country", {
+                  {...form.register('country', {
                     required: true,
                     minLength: 1,
                   })}
@@ -219,7 +191,7 @@ const CardInformationForm = () => {
                   <Input
                     id="city"
                     placeholder="Ikeja"
-                    {...form.register("city", {
+                    {...form.register('city', {
                       required: true,
                       minLength: 1,
                     })}
@@ -245,7 +217,7 @@ const CardInformationForm = () => {
                   <Input
                     id="postalCode"
                     placeholder="100213"
-                    {...form.register("postalCode", {
+                    {...form.register('postalCode', {
                       required: true,
                       minLength: 1,
                     })}
@@ -272,7 +244,7 @@ const CardInformationForm = () => {
                   <Input
                     id="expMonth"
                     placeholder=""
-                    {...form.register("expMonth", {
+                    {...form.register('expMonth', {
                       required: true,
                       minLength: 1,
                     })}
@@ -298,7 +270,7 @@ const CardInformationForm = () => {
                   <Input
                     id="expYear"
                     placeholder=""
-                    {...form.register("expYear", {
+                    {...form.register('expYear', {
                       required: true,
                       minLength: 1,
                     })}
@@ -326,7 +298,7 @@ const CardInformationForm = () => {
                   <Input
                     id="number"
                     placeholder=""
-                    {...form.register("number", {
+                    {...form.register('number', {
                       required: true,
                       minLength: 1,
                     })}
@@ -352,7 +324,7 @@ const CardInformationForm = () => {
                   <Input
                     id="cvv"
                     placeholder=""
-                    {...form.register("cvv", {
+                    {...form.register('cvv', {
                       required: true,
                       minLength: 1,
                     })}
@@ -378,7 +350,7 @@ const CardInformationForm = () => {
                 <Input
                   id="phoneNumber"
                   placeholder=""
-                  {...form.register("phoneNumber", {
+                  {...form.register('phoneNumber', {
                     required: true,
                     minLength: 1,
                   })}
@@ -390,11 +362,7 @@ const CardInformationForm = () => {
           )}
         />
 
-        <Button
-          className="w-full rounded-md"
-          variant={"primary"}
-          loading={loading}
-        >
+        <Button className="w-full rounded-md" variant={'primary'} loading={loading}>
           Pay
         </Button>
       </form>

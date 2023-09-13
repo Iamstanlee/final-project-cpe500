@@ -1,12 +1,15 @@
 import React from 'react';
-import Head from 'next/head';
+import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { Poppins } from 'next/font/google';
-import Scaffold from '@/components/scaffold';
-import 'react-toastify/dist/ReactToastify.min.css';
-import './globals.css';
+import Head from 'next/head';
+import { ToastContainer } from 'react-toastify';
 import { cn } from '@/lib/utils';
 import { AuthContextProvider } from '@/hooks/use-auth';
+import Scaffold from '@/components/scaffold';
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import './globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -15,7 +18,16 @@ const poppins = Poppins({
   weight: '400',
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export type AppPage<P = {}, IP = P> = NextPage<P, IP> & {
+  removeDefaultScaffold?: boolean;
+};
+
+type Props = AppProps & {
+  Component: AppPage;
+};
+
+export default function App({ Component, pageProps }: Props) {
+  console.log(Component.removeDefaultScaffold);
   return (
     <main className={cn([poppins.className, 'm-auto'])}>
       <Head>
@@ -25,9 +37,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/favicon.png" />
       </Head>
       <AuthContextProvider>
-        <Scaffold>
+        {Component.removeDefaultScaffold ? (
           <Component {...pageProps} />
-        </Scaffold>
+        ) : (
+          <Scaffold>
+            <Component {...pageProps} />
+          </Scaffold>
+        )}
+        <ToastContainer hideProgressBar />
       </AuthContextProvider>
     </main>
   );

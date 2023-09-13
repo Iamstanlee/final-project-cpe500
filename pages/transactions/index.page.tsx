@@ -1,5 +1,5 @@
-import Transactions from '@/pages/transactions/transactions';
+import TransactionList from '@/pages/transactions/components/transaction-list';
 
 export default () => {
-  return <Transactions />;
+  return <TransactionList pagination filter />;
 };

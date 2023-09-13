@@ -1,13 +1,11 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/form';
 import { Input } from '@/input';
-import { LoginRequestDto, loginInputSchema } from '@/types';
-import { useAuth } from '@/hooks/use-auth';
+import { loginInputSchema, LoginRequestDto } from '@/types';
+import useLogin from '@/hooks/use-login';
 
 const defaultValues: Partial<LoginRequestDto> = {
   email_address: '',
@@ -15,9 +13,7 @@ const defaultValues: Partial<LoginRequestDto> = {
 };
 
 const LoginForm = () => {
-  const { signIn } = useAuth();
-
-  const [loading, setLoading] = useState(false);
+  const { isLoading, login } = useLogin();
 
   const form = useForm<LoginRequestDto>({
     resolver: zodResolver(loginInputSchema),
@@ -25,8 +21,7 @@ const LoginForm = () => {
   });
 
   async function onSubmit(data: LoginRequestDto) {
-    setLoading(true);
-    signIn(data.email_address, data.password);
+    await login(data);
   }
 
   return (
@@ -64,7 +59,7 @@ const LoginForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full bg-primary" loading={loading}>
+        <Button type="submit" className="w-full bg-primary" loading={isLoading}>
           Login
         </Button>
       </form>

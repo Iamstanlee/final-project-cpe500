@@ -1,22 +1,16 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/form';
 import { Input } from '@/input';
-import { SignupRequestDto, signupInputSchema } from '@/types';
-import { useAuth } from '@/hooks/use-auth';
+import { signupInputSchema, SignupRequestDto } from '@/types';
+import useSignup from '@/hooks/use-signup';
 
-const defaultValues: Partial<SignupRequestDto> = {
-  email_address: '',
-  password: '',
-};
+const defaultValues: Partial<SignupRequestDto> = {};
 
 const SignupForm = () => {
-  const { signUp } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { isLoading, signup } = useSignup();
 
   const form = useForm<SignupRequestDto>({
     resolver: zodResolver(signupInputSchema),
@@ -24,8 +18,7 @@ const SignupForm = () => {
   });
 
   async function onSubmit(data: SignupRequestDto) {
-    setLoading(true);
-    signUp(data.email_address, data.first_name, data.last_name, data.password);
+    await signup(data);
   }
 
   return (
@@ -95,8 +88,8 @@ const SignupForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full bg-primary" loading={loading}>
-          Login
+        <Button type="submit" className="w-full bg-primary" loading={isLoading}>
+          Signup
         </Button>
       </form>
     </Form>

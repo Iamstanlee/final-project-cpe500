@@ -67,7 +67,7 @@ const Accounts = () => {
             <div className="flex flex-col text-slate-500 text-sm">
               Payment Link
               <span
-                className="text-slate-950 underline underline-offset-4"
+                className="text-slate-950 underline underline-offset-4 cursor-pointer"
                 onClick={() => router.push(`/pay/${paymentLink?.slug}`)}
               >
                 {paymentLink?.slug}

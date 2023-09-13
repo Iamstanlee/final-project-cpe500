@@ -1,8 +1,8 @@
-import { cn, formatDate } from '@/lib/utils';
+import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import React, { useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, MoveDown, MoveUp } from 'lucide-react';
+import { MoveDown, MoveUp } from 'lucide-react';
 import { Transaction } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 
@@ -49,7 +49,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-left">
-          <span>{formatDate(new Date(row.getValue('timestamp')))}</span>
+          <span>{formatDate(new Date(row.original.created_at))}</span>
         </div>
       );
     },
@@ -63,7 +63,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       return (
         <span className="mr-2 text-muted-foreground">
-          {row.original.amount.value} {row.original.amount.currency}
+          {formatCurrency(row.original.amount.value, row.original.amount.currency)}
         </span>
       );
     },
@@ -87,10 +87,6 @@ export const columns: ColumnDef<Transaction>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
-  },
-  {
-    id: 'actions',
-    cell: ({}) => <ExternalLink size={16} color="blue" className="cursor-pointer" />,
   },
 ];
 

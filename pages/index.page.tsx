@@ -1,5 +1,5 @@
-import Dashboard from '@/pages/dashboard/dashboard';
+import DashboardPage from '@/pages/dashboard/index.page';
 
 export default () => {
-  return <Dashboard />;
+  return <DashboardPage />;
 };

@@ -26,8 +26,8 @@ export enum Db {
 }
 
 export enum PaymentLinkType {
-  basic = 'payment_link',
-  one__time = 'one_time_link',
+  basic = 'basic',
+  one_time = 'one_time_link',
 }
 
 export const post__request_header = {

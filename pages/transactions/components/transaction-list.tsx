@@ -1,11 +1,7 @@
-import { z } from 'zod';
-import { useEffect, useState } from 'react';
-import { Transaction, transactionSchema } from '@/lib/types';
-
 import { DataTable } from './data-table';
 import { columns } from './columns';
-import { data } from './data';
 import { Card } from '@/card';
+import useTransactions from '@/hooks/use-transactions';
 
 interface TransactionListProps {
   limit?: number;
@@ -14,20 +10,17 @@ interface TransactionListProps {
 }
 
 const TransactionList = ({ limit = 12, pagination = false, filter = false }: TransactionListProps) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  useEffect(() => {
-    setTransactions(
-      z
-        .array(transactionSchema)
-        .parse(JSON.parse(JSON.stringify(data)))
-        .slice(0, limit)
-    );
-  }, [limit]);
+  const { isLoading, transactions } = useTransactions();
 
   return (
     <Card className="pt-5">
-      <DataTable columns={columns} data={transactions} pagination={pagination} filter={filter} />
+      <DataTable
+        columns={columns}
+        loading={isLoading}
+        data={transactions?.slice(0, limit) ?? []}
+        pagination={pagination}
+        filter={filter}
+      />
     </Card>
   );
 };
