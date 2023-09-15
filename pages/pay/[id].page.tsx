@@ -48,8 +48,8 @@ const PaymentPage: AppPage = () => {
     );
 
   return (
-    <div className="flex items-center flex-col w-full">
-      <p>Pay {paymentLinkInfo?.first_name}</p>
+    <div className="flex items-center flex-col gap-4 w-full px-4 py-6">
+      <p className="text-bold text-xl">Pay {paymentLinkInfo?.first_name}</p>
       <CardInformationForm />
     </div>
   );

@@ -176,7 +176,7 @@ const CardInformationForm = () => {
           )}
         />
 
-        <div className="flex gap-y-4 item-center">
+        <div className="flex flex-col sm:flex-row gap-x-4 item-center">
           <FormField
             control={form.control}
             name="city"
@@ -229,7 +229,7 @@ const CardInformationForm = () => {
             )}
           />
         </div>
-        <div className="flex gap-y-4 item-center">
+        <div className="flex flex-col sm:flex-row gap-x-4 item-center">
           <FormField
             control={form.control}
             name="expMonth"
@@ -283,7 +283,7 @@ const CardInformationForm = () => {
           />
         </div>
 
-        <div className="flex gap-y-4 item-center">
+        <div className="flex flex-col sm:flex-row gap-x-4 item-center">
           <FormField
             control={form.control}
             name="number"
