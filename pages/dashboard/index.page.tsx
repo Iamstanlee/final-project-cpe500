@@ -2,7 +2,7 @@ import { ArrowLeftRight, Copy } from 'lucide-react';
 import { Card, CardHeader } from '@/card';
 import TransactionList from '@/pages/transactions/components/transaction-list';
 import { useAuth } from '@/hooks/use-auth';
-import { formatCurrency } from '@/utils';
+import { copyToClipboard, formatCurrency, paymentLinkUrl } from '@/utils';
 
 export default function DashboardPage() {
   const { wallet, paymentLink } = useAuth();
@@ -15,13 +15,11 @@ export default function DashboardPage() {
             <span className="font-bold"> {formatCurrency(wallet?.balance ?? 0, wallet?.currency)}</span>
           </p>
           <p className="pb-8 flex flex-row gap-2 items-center">
-            Payment link: https://localhost:3000/pay/{paymentLink?.slug}
+            Payment link: {paymentLinkUrl(paymentLink?.slug)}
             <Copy
               size={20}
               onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText('https://localhost:3000/pay/' + paymentLink?.slug);
-                } catch (error) {}
+                copyToClipboard(paymentLinkUrl(paymentLink?.slug));
               }}
               className="cursor-pointer"
             />

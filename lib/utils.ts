@@ -38,9 +38,9 @@ export async function copyToClipboard(text: string) {
   } catch (error) {}
 }
 
-export function isProduction(): boolean {
-  return !window.location.origin.includes('localhost');
-}
+export const paymentLinkUrl = (slug?: string) => {
+  return `${window.location.origin}/pay/${slug}`;
+};
 
 export const deserialize = <T>(data: string | T): T => {
   try {
