@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import SettingContainer from './components/setting-container';
 import Account from '@/pages/settings/sections/account';
 import Notification from '@/pages/settings/sections/notification';
+import { useAuth } from '@/hooks/use-auth';
 
 enum _page {
   account = 'accounts',
@@ -32,6 +33,8 @@ const pages = [
 ];
 
 export default function SettingsPage() {
+    const { signOut } = useAuth();
+
   const [page, setPage] = useState<_page>(_page.account);
 
   const selected = pages.find((value) => value.key == page);
@@ -74,7 +77,7 @@ export default function SettingsPage() {
               onClick={() => {}}
               className={cn(buttonVariants({ variant: 'ghost' }), 'justify-between rounded-md cursor-pointer')}
             >
-              <div className="flex flex-row">
+              <div className="flex flex-row" onClick={signOut}>
                 <LogOut size={18} className="stroke-red-400" />
                 <span className="ml-2 text-red-400">Log out</span>
               </div>
