@@ -4,6 +4,7 @@ import React from 'react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Transaction } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { formatCurrency } from '@/lib/utils';
 
 interface Props {
   onClose: () => void;
@@ -43,7 +44,7 @@ const TransactionDetail = ({ open, setOpen, details }: Props) => {
 
           <div className="pt-4">
             <span className="min-w-[120px] inline-block">Amount: </span>
-            <span>{`${details.amount.currency}${details.amount.value}`}</span>
+            <span>{`${details.amount.currency}${formatCurrency(details.amount.value)}`}</span>
           </div>
         </div>
       </SheetContent>
