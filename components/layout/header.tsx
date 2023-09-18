@@ -21,7 +21,7 @@ const Header = ({ className }: HeaderProps) => {
       </Link>
       <div className="ml-auto flex items-center space-x-4">
         <Avatar className="bg-whitesmoke-300 justify-center items-center">{userInitials() ?? ''}</Avatar>
-        <p className="text-danger text-sm" onClick={signOut}>
+        <p className="text-danger text-sm cursor-pointer" onClick={signOut}>
           Log Out
         </p>
       </div>
