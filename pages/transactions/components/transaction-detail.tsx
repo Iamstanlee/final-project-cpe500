@@ -43,7 +43,7 @@ const TransactionDetail = ({ open, setOpen, details }: Props) => {
 
           <div className="pt-4">
             <span className="min-w-[120px] inline-block">Amount: </span>
-            <span>{`${details.amount.currency}${formatCurrency(details.amount.value)}`}</span>
+            <span>{formatCurrency(details.amount.value)}</span>
           </div>
         </div>
       </SheetContent>
