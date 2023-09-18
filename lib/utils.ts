@@ -1,3 +1,4 @@
+import { useAuth } from '@/hooks/use-auth';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -52,4 +53,9 @@ export const deserialize = <T>(data: string | T): T => {
 
 export const serialize = <T>(data: T): string => {
   return JSON.stringify(data);
+};
+
+export const userInitials = () => {
+  const { user } = useAuth();
+  return `${user?.first_name[0]}${user?.last_name[0]}`;
 };

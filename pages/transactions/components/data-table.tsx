@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -9,6 +9,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -16,6 +17,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TablePagination } from './table-pagination';
 import { TableToolbar } from './tool-bar';
+import TransactionDetail from './transaction-detail';
+import { Transaction } from '@/lib/types';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,6 +39,10 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const [open, setOpen] = React.useState(false);
+  const [transactionDetails, setTransactionDetails] = useState<Transaction>();
+  const onClose = React.useCallback(() => setOpen(false), [open]);
 
   const table = useReactTable({
     data,
@@ -59,6 +66,13 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const getTransactionDetails = (row: Row<TData>) => {
+    const tableRow = {};
+    row.getVisibleCells().forEach((cell) => (tableRow[cell.id.slice(2)] = cell.getValue()));
+
+    return tableRow as Transaction;
+  };
+  
   return (
     <div className="space-y-4">
       {filter && <TableToolbar className="px-3" table={table} />}
@@ -87,6 +101,10 @@ export function DataTable<TData, TValue>({
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  onClick={() => {
+                    setOpen(true);
+                    setTransactionDetails(getTransactionDetails(row));
+                  }}
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   className="border border-slate-200"
@@ -106,6 +124,14 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+      {open && (
+        <TransactionDetail
+          details={transactionDetails as Transaction}
+          open={open}
+          setOpen={setOpen}
+          onClose={onClose}
+        />
+      )}
       {pagination && <TablePagination table={table} />}
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn, userInitials } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
+import { Avatar } from '../ui/avatar';
 
 interface HeaderProps {
   className?: string;
@@ -19,7 +20,10 @@ const Header = ({ className }: HeaderProps) => {
         500lvl Project
       </Link>
       <div className="ml-auto flex items-center space-x-4">
-        <p onClick={signOut}>AVATAR</p>
+        <Avatar className="bg-whitesmoke-300 justify-center items-center">{userInitials() ?? ''}</Avatar>
+        <p className="text-danger text-sm" onClick={signOut}>
+          Log Out
+        </p>
       </div>
     </div>
   );
