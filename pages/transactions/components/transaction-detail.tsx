@@ -20,7 +20,6 @@ const TransactionDetail = ({ open, setOpen, details }: Props) => {
       <SheetContent className="sm:max-w-lg">
         <SheetHeader className="p-0">
           <SheetTitle>Transaction Details</SheetTitle>
-          <SheetDescription>Collect payment for products and services you offer.</SheetDescription>
         </SheetHeader>
         <div className="grid mt-6 gap-6 py-4 divide-y-2 divide-slate-100">
           <div>
