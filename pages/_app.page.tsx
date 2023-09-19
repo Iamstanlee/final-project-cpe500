@@ -20,6 +20,7 @@ const poppins = Poppins({
 
 export type AppPage<P = {}, IP = P> = NextPage<P, IP> & {
   removeDefaultScaffold?: boolean;
+  isNotAuthProtected?: boolean;
 };
 
 type Props = AppProps & {
@@ -36,16 +37,20 @@ export default function App({ Component, pageProps }: Props) {
         <link rel="icon" href="/favicon.png"></link>
         <link rel="apple-touch-icon" href="/favicon.png" />
       </Head>
-      <AuthContextProvider>
-        {Component.removeDefaultScaffold ? (
-          <Component {...pageProps} />
-        ) : (
-          <Scaffold>
+      {Component.isNotAuthProtected ? (
+        <Component {...pageProps} />
+      ) : (
+        <AuthContextProvider>
+          {Component.removeDefaultScaffold ? (
             <Component {...pageProps} />
-          </Scaffold>
-        )}
-        <ToastContainer hideProgressBar />
-      </AuthContextProvider>
+          ) : (
+            <Scaffold>
+              <Component {...pageProps} />
+            </Scaffold>
+          )}
+          <ToastContainer hideProgressBar />
+        </AuthContextProvider>
+      )}
     </main>
   );
 }

@@ -56,4 +56,5 @@ const PaymentPage: AppPage = () => {
 };
 
 PaymentPage.removeDefaultScaffold = true;
+PaymentPage.isNotAuthProtected = true;
 export default PaymentPage;
