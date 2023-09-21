@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useState} from 'react';
-import {useAuth} from '@/hooks/use-auth';
-import {supabase} from '@/supabase';
-import {Db} from '@/constants';
-import {Transaction} from '@/types';
+import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/supabase";
+import { Db } from "@/constants";
+import { Transaction } from "@/types";
+import { generateRandomId } from "@/utils";
 
 // TODO use context and add pagination
 const useTransactions = () => {
@@ -24,7 +25,57 @@ const useTransactions = () => {
     if (error) {
       setError(error.message ?? 'An unknown error occurred. Please try again.');
     } else {
-      setTransactions(data);
+      const randomTxns: Transaction[] = [
+        {
+          id: generateRandomId(),
+          wallet_id: '1',
+          from: 'Stanley Akpama',
+          status: 'success',
+          type: 'transfer',
+          amount: {
+            value: 273343,
+            currency: 'NGN',
+          },
+          created_at: '2023-09-01T00:00:00.000Z',
+        },
+        {
+          id: generateRandomId(),
+          wallet_id: '1',
+          from: 'Rukkie',
+          status: 'success',
+          type: 'transfer',
+          amount: {
+            value: 400000,
+            currency: 'NGN',
+          },
+          created_at: '2023-09-01T00:00:00.000Z',
+        },
+        {
+          id: generateRandomId(),
+          wallet_id: '1',
+          from: 'Stanley Akpama',
+          status: 'success',
+          type: 'transfer',
+          amount: {
+            value: 273343,
+            currency: 'NGN',
+          },
+          created_at: '2023-09-01T00:00:00.000Z',
+        },
+        {
+          id: generateRandomId(),
+          wallet_id: '1',
+          from: 'Stanlee',
+          status: 'success',
+          type: 'transfer',
+          amount: {
+            value: 43022,
+            currency: 'NGN',
+          },
+          created_at: '2023-09-01T00:00:00.000Z',
+        },
+      ];
+      setTransactions([...randomTxns, ...data]);
     }
     setIsLoading(false);
   }, []);

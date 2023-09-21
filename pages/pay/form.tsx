@@ -98,100 +98,22 @@ const CardInformationForm = () => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="line1"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <span>
-                <FormLabel>
-                  Line1 <span className="text-red-300">*</span>
-                </FormLabel>
-              </span>
-              <FormControl>
-                <Input
-                  id="line1"
-                  placeholder=""
-                  {...form.register('line1', {
-                    required: true,
-                    minLength: 1,
-                  })}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="district"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <span>
-                <FormLabel>
-                  District <span className="text-red-300">*</span>
-                </FormLabel>
-              </span>
-              <FormControl>
-                <Input
-                  id="district"
-                  placeholder=""
-                  {...form.register('district', {
-                    required: true,
-                    minLength: 1,
-                  })}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <span>
-                <FormLabel>
-                  Country <span className="text-red-300">*</span>
-                </FormLabel>
-              </span>
-              <FormControl>
-                <Input
-                  id="country"
-                  placeholder="NIgeria"
-                  {...form.register('country', {
-                    required: true,
-                    minLength: 1,
-                  })}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="flex flex-col sm:flex-row gap-x-4 item-center">
           <FormField
             control={form.control}
-            name="city"
+            name="number"
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <span>
                   <FormLabel>
-                    City <span className="text-red-300">*</span>
+                    Card Number <span className="text-red-300">*</span>
                   </FormLabel>
                 </span>
                 <FormControl>
                   <Input
-                    id="city"
-                    placeholder="Ikeja"
-                    {...form.register('city', {
+                    id="number"
+                    placeholder=""
+                    {...form.register('number', {
                       required: true,
                       minLength: 1,
                     })}
@@ -205,19 +127,19 @@ const CardInformationForm = () => {
 
           <FormField
             control={form.control}
-            name="postalCode"
+            name="cvv"
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <span>
                   <FormLabel>
-                    Postal Code <span className="text-red-300">*</span>
+                    CVV <span className="text-red-300">*</span>
                   </FormLabel>
                 </span>
                 <FormControl>
                   <Input
-                    id="postalCode"
-                    placeholder="100213"
-                    {...form.register('postalCode', {
+                    id="cvv"
+                    placeholder=""
+                    {...form.register('cvv', {
                       required: true,
                       minLength: 1,
                     })}
@@ -282,23 +204,22 @@ const CardInformationForm = () => {
             )}
           />
         </div>
-
         <div className="flex flex-col sm:flex-row gap-x-4 item-center">
           <FormField
             control={form.control}
-            name="number"
+            name="city"
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <span>
                   <FormLabel>
-                    Card Number <span className="text-red-300">*</span>
+                    City <span className="text-red-300">*</span>
                   </FormLabel>
                 </span>
                 <FormControl>
                   <Input
-                    id="number"
-                    placeholder=""
-                    {...form.register('number', {
+                    id="city"
+                    placeholder="Ikeja"
+                    {...form.register('city', {
                       required: true,
                       minLength: 1,
                     })}
@@ -312,19 +233,19 @@ const CardInformationForm = () => {
 
           <FormField
             control={form.control}
-            name="cvv"
+            name="postalCode"
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <span>
                   <FormLabel>
-                    CVV <span className="text-red-300">*</span>
+                    Postal Code <span className="text-red-300">*</span>
                   </FormLabel>
                 </span>
                 <FormControl>
                   <Input
-                    id="cvv"
-                    placeholder=""
-                    {...form.register('cvv', {
+                    id="postalCode"
+                    placeholder="100213"
+                    {...form.register('postalCode', {
                       required: true,
                       minLength: 1,
                     })}
@@ -336,31 +257,6 @@ const CardInformationForm = () => {
             )}
           />
         </div>
-        <FormField
-          control={form.control}
-          name="phoneNumber"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <span>
-                <FormLabel>
-                  Phone Number <span className="text-red-300">*</span>
-                </FormLabel>
-              </span>
-              <FormControl>
-                <Input
-                  id="phoneNumber"
-                  placeholder=""
-                  {...form.register('phoneNumber', {
-                    required: true,
-                    minLength: 1,
-                  })}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <Button className="w-full rounded-md" variant={'primary'} loading={loading}>
           Pay
